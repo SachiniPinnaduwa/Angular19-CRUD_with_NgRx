@@ -1,0 +1,11 @@
+{
+  "employee": [
+    {
+      "id": "2",
+      "name": "nima",
+      "doj": "2025-01-01T18:30:00.000Z",
+      "role": "operator",
+      "salary": "1200000"
+    }
+  ]
+}
