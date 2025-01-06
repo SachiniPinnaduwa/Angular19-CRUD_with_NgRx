@@ -5,7 +5,21 @@
       "name": "nima",
       "doj": "2025-01-01T18:30:00.000Z",
       "role": "operator",
-      "salary": "1200000"
+      "salary": "130000"
+    },
+    {
+      "id": "1",
+      "name": "sachini",
+      "doj": "2016-01-03T18:30:00.000Z",
+      "role": "lead",
+      "salary": "1500"
+    },
+    {
+      "id": "3",
+      "name": "Nimal",
+      "doj": "2016-01-03T18:30:00.000Z",
+      "role": "manager",
+      "salary": "1200"
     }
   ]
 }
