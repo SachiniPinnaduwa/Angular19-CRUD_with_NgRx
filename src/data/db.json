@@ -15,11 +15,11 @@
       "salary": "1500"
     },
     {
-      "id": "3",
-      "name": "Nimal",
-      "doj": "2016-01-03T18:30:00.000Z",
-      "role": "manager",
-      "salary": "1200"
+      "id": "5",
+      "name": "Perera",
+      "doj": "2022-03-02T18:30:00.000Z",
+      "role": "operator",
+      "salary": "1480"
     }
   ]
 }

@@ -8,7 +8,10 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 
 import { AddEmployeeComponent } from '../add-employee/add-employee.component';
 import { Employee } from '../../model/Employee';
-import { EmployeeService } from '../../service/employee.service';
+//import { EmployeeService } from '../../service/employee.service';
+import { Store } from '@ngrx/store';
+import { deleteEmployee, loadEmployee } from '../../Store/Employee.Action';
+import { getEmpList } from '../../Store/Employee.Selector';
 
 @Component({
   selector: 'app-employee',
@@ -35,7 +38,8 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   ];
   subscription = new Subscription();
 
-  constructor(private dialog: MatDialog, private service: EmployeeService) {}
+  //constructor(private dialog: MatDialog, private service: EmployeeService) {}
+  constructor(private dialog: MatDialog, private store: Store) {}
   ngOnDestroy(): void {
     this.subscription.unsubscribe;
   }
@@ -44,23 +48,29 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   }
 
   GetallEmployee() {
-    let sub = this.service.GetAll().subscribe((item) => {
+    // let sub = this.service.GetAll().subscribe((item) => {
+    //   this.empList = item;
+    //   this.dataSource = new MatTableDataSource(this.empList);
+    // });
+    // this.subscription.add(sub);
+    this.store.dispatch(loadEmployee());
+    this.store.select(getEmpList).subscribe((item) => {
       this.empList = item;
       this.dataSource = new MatTableDataSource(this.empList);
     });
-    this.subscription.add(sub);
   }
+
   addemployee() {
     this.openpopup(0);
   }
 
   DeleteEmployee(empId: number) {
     if (confirm('Are you sure?')) {
-      let sub = this.service.Delete(empId).subscribe((item) => {
-        this.GetallEmployee();
-      });
-      this.subscription.add(sub);
-      //this.store.dispatch(deleteEmployee({ empId: empId }));
+      // let sub = this.service.Delete(empId).subscribe((item) => {
+      //   this.GetallEmployee();
+      // });
+      // this.subscription.add(sub);
+      this.store.dispatch(deleteEmployee({ empId: empId }));
     }
   }
 

@@ -13,10 +13,18 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
-import { Employee } from '../../model/Employee';
-import { EmployeeService } from '../../service/employee.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+
+import { Employee } from '../../model/Employee';
+import { EmployeeService } from '../../service/employee.service';
+import { Store } from '@ngrx/store';
+import {
+  addEmployee,
+  getEmployee,
+  updateEmployee,
+} from '../../Store/Employee.Action';
+import { selectEmployee } from '../../Store/Employee.Selector';
 
 @Component({
   selector: 'app-add-employee',
@@ -39,8 +47,15 @@ export class AddEmployeeComponent implements OnInit {
   dialodata: any;
   isEdit = false;
 
+  // constructor(
+  //   private service: EmployeeService,
+  //   private ref: MatDialogRef<AddEmployeeComponent>,
+  //   private toastr: ToastrService,
+  //   @Inject(MAT_DIALOG_DATA) public data: any
+  // ) {}
+
   constructor(
-    private service: EmployeeService,
+    private store: Store,
     private ref: MatDialogRef<AddEmployeeComponent>,
     private toastr: ToastrService,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -51,7 +66,8 @@ export class AddEmployeeComponent implements OnInit {
     if (this.dialodata.code > 0) {
       this.title = 'Edit Employee';
       this.isEdit = true;
-      this.service.Get(this.dialodata.code).subscribe((item) => {
+      this.store.dispatch(getEmployee({ empId: this.dialodata.code }));
+      this.store.select(selectEmployee).subscribe((item) => {
         let _data = item;
         if (_data != null) {
           this.empForm.setValue({
@@ -63,6 +79,21 @@ export class AddEmployeeComponent implements OnInit {
           });
         }
       });
+
+      // this.title = 'Edit Employee';
+      // this.isEdit = true;
+      // this.service.Get(this.dialodata.code).subscribe((item) => {
+      //   let _data = item;
+      //   if (_data != null) {
+      //     this.empForm.setValue({
+      //       id: _data.id,
+      //       name: _data.name,
+      //       doj: _data.doj,
+      //       role: _data.role,
+      //       salary: _data.salary,
+      //     });
+      //   }
+      // });
     }
   }
 
@@ -85,17 +116,20 @@ export class AddEmployeeComponent implements OnInit {
           salary: this.empForm.value.salary as number,
         };
 
-        if (this.isEdit) {
-          this.service.Update(_data).subscribe((item) => {
-            this.toastr.success('Saved successfully', 'Updated');
-            this.closepopup();
-          });
+        if (!this.isEdit) {
+          // this.service.Update(_data).subscribe((item) => {
+          //   this.toastr.success('Saved successfully', 'Updated');
+          //   this.closepopup();
+          // });
+          this.store.dispatch(addEmployee({ data: _data }));
         } else {
-          this.service.Create(_data).subscribe((item) => {
-            this.toastr.success('Saved successfully', 'Created');
-            this.closepopup();
-          });
+          // this.service.Create(_data).subscribe((item) => {
+          //   this.toastr.success('Saved successfully', 'Created');
+          //   this.closepopup();
+          // });
+          this.store.dispatch(updateEmployee({ data: _data }));
         }
+        this.closepopup();
       }
     }
   }
